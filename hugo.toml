@@ -1,0 +1,68 @@
+baseURL = "https://DanialKassym.github.io/"
+languageCode = "ru"
+title = "Danial Kassym"
+theme = "blowfish"
+
+defaultContentLanguage = "ru"
+
+enableRobotsTXT = true
+
+summaryLength = 30
+
+[pagination]
+pagerSize = 10
+
+[markup]
+
+[markup.highlight]
+style = "github-dark"
+lineNos = true
+codeFences = true
+
+[params]
+
+colorScheme = "slate"
+
+defaultAppearance = "dark"
+
+autoSwitchAppearance = false
+
+homepage.layout = "profile"
+
+description = "Java • Pentesting • Hack The Box"
+
+[params.author]
+
+name = "Danial Kassym"
+
+headline = "Java Backend Developer |Pentester"
+
+bio = "Изучаю разработку на Spring ,Offensive Security, публикую HTB Walkthroughs."
+
+links = [
+
+{ github = "https://github.com/DanialKassym" },
+
+{ linkedin = "https://linkedin.com/in/danial-kassym-a44b2435a" },
+
+]
+
+[[menu.main]]
+
+identifier = "home"
+
+name = "Главная"
+
+url = "/"
+
+weight = 1
+
+[[menu.main]]
+
+identifier = "htb"
+
+name = "HTB Walkthroughs"
+
+url = "/htb/"
+
+weight = 2
