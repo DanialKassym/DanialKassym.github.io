@@ -8,13 +8,12 @@ title: "Главная"
 
 Я занимаюсь:
 
-- Penetration Testing
-- Java Backend
-- CTF
-- RHEL administration
+- Пентестингом и CTF
+- Бекэндом на Spring
+- Администрированием RHEL систем
 
 ---
 
-## Последние HTB Walkthroughs
+## Последние прохождения машин HTB
 
 Все мои прохождения находятся в разделе **HTB Walkthroughs**.
