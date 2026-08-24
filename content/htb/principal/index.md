@@ -6,7 +6,8 @@ categories: ["Walkthrough"]
 difficulty: "Medium"                 
 ---
 
-![Principal machine image](../../static/principal/principal.png)
+![Principal machine image](principal.png)
+
 
 ---
 
@@ -22,25 +23,25 @@ Principal — Linux-машина, где основной вектор завя�
 
 Из интересного — `22/tcp` и `8080/tcp`:
 
-![Результаты сканирования Nmap](../../static/principal/nmap.png)
+![Результаты сканирования Nmap](nmap.png)
 
 На веб-сервисе нашёл `pac4j`.
 
-![Обнаружение pac4j](../../static/principal/website.png)
+![Обнаружение pac4j](website.png)
 
-Точную версию снаружи определить не получилось. Здесь сработала инженерная интуиция, основанная на сложности машины: поскольку это Medium, логично было проверить критические уязвимости в используемом стеке, особенно при наличии публичного PoC.
+Точную версию снаружи определить не получилось. Поскольку это Medium, логично было предположение о наличие CVE с публичным PoC.
 
 Начал с CVE Details: сначала посмотрел уязвимости для pac4j, затем проверил более свежие версии. В результате вышел на 6.3.2rc1 и CVE-2026-29000.
 
-![Поиск pac4j на CVE Details](../../static/principal/pac4j.png)
+![Поиск pac4j на CVE Details](pac4j.png)
 
-![CVE-2026-29000 на CVE Details](../../static/principal/cve-2026-29000.png)
+![CVE-2026-29000 на CVE Details](cve-2026-29000.png)
 
 Далее проверил GitHub на наличие публичного PoC и нашёл:
 
 `CVE-2026-29000-pac4j-jwt-auth-bypass`
 
-![Поиск PoC на GitHub](../../static/principal/github.png)
+![Поиск PoC на GitHub](github.png)
 
 Репозиторий: [PtechAmanja/CVE-2026-29000-pac4j-jwt-auth-bypass](https://github.com/PtechAmanja/CVE-2026-29000-pac4j-jwt-auth-bypass)
 
@@ -54,19 +55,19 @@ PoC получает JWKS с целевого сервера. В исходно�
 
 После запуска получил forged JWT token.
 
-![Получение forged JWT token](../../static/principal/forgedtoken.png)
+![Получение forged JWT token](forgedtoken.png)
 
 Затем установил токен в браузере через sessionStorage:
 
     sessionStorage.setItem("auth_token", "<PASTE_TOKEN_HERE>")
 
-![Установка forged token в sessionStorage](../../static/principal/session.png)
+![Установка forged token в sessionStorage](session.png)
 
 После перехода на /dasboard получил доступ с привилегиями admin.
 
-![Успешный обход аутентификации и обнаружение svc-deploy и связанных параметров](../../static/principal/svcdeploy.png)
+![Успешный обход аутентификации и обнаружение svc-deploy и связанных параметров](svcdeploy.png)
 
-![Enckeys](../../static/principal/enckeys.png)
+![Enckeys](enckeys.png)
 
 В админке особенно интересными оказались `encryptionkey` и `sshCaPath`.
 
@@ -81,7 +82,7 @@ PoC получает JWKS с целевого сервера. В исходно�
 
 После входа получил `user.txt`.
 
-![Успешный обход аутентификации и получение флага пользователя](../../static/principal/user_flag.png)
+![Успешный обход аутентификации и получение флага пользователя](user_flag.png)
 
 ## Повышение привилегий (PrivEsc)
 
@@ -89,7 +90,7 @@ PoC получает JWKS с целевого сервера. В исходно�
 
     /opt/path/principal/README.txt
 
-![README.txt](../../static/principal/readme.png)
+![README.txt](readme.png)
 
 Затем выполнил команду:
 
@@ -101,18 +102,20 @@ PoC получает JWKS с целевого сервера. В исходно�
 
 Затем проверил SSH-конфигурацию. В ней было видно, что ключи, подписанные /opt/principal/ssh/ca, являются доверенными для этой системы.
 
-![Конфигурация SSH CA](../../static/principal/configs.png)
+![Конфигурация SSH CA](configs.png)
 
 Имея доступ к svc-deploy и зная, что этот пользователь связан с ротаций корневых SSH сертификатов, следующим шагом стала генерация новой пары ключей в /tmp/ и её подпись доверенным CA.
 
-    ssh-keygen -t rsa -f /tmp/root_key
+    ssh-keygen -t rsa -b 4096 -f /tmp/root_key
 
 После этого ключ был подписан доверенным CA.
 
-![Генерация ключей и подпись trusted CA](../../static/principal/keygen.png)
+    ssh-keygen -s /opt/principal/ssh/ca -I "RootCert" -n root /tmp/root_key.pub
+
+![Генерация ключей и подпись trusted CA](keygen.png)
 
 После получения подписанного ключа выполнил SSH-вход под 'root'
 
-![Получение Root флага](../../static/principal/root_flag.png)
+![Получение Root флага](root_flag.png)
 
 После входа под `root` получил `root.txt`.

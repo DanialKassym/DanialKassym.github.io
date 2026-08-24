@@ -1,0 +1,7 @@
+# Временная папка сборки сервера
+public/
+resources/
+
+# Локальные логи и кэш
+.hugo_build.lock
+assets/jsconfig.json
