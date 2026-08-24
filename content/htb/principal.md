@@ -1,6 +1,6 @@
 ---
 title: "HTB: Principal"
-date: 18-08-2026
+date: 2026-08-18
 tags: ["pac4j", "JWT", "SSH-CA", "Linux"]
 categories: ["Walkthrough"]
 difficulty: "Medium"                 
